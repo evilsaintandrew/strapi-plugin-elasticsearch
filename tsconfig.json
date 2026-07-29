@@ -1,0 +1,5 @@
+{
+  "extends": "@strapi/typescript-utils/tsconfigs/server",
+  "include": ["server", "./custom.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

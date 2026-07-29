@@ -1,0 +1,8 @@
+{
+  "extends": "@strapi/typescript-utils/tsconfigs/admin",
+  "compilerOptions": {
+    "resolveJsonModule": true
+  },
+  "include": ["src", "./custom.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

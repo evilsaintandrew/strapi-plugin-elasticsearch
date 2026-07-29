@@ -1,0 +1,22 @@
+import markdownToTxt from 'markdown-to-txt';
+
+function transformMarkdownToText(md: string): string {
+    let text = md;
+    try {
+        text = markdownToTxt(md);
+    }
+    catch(err) {
+        console.error('strapi-plugin-elasticsearch : Error while transforming markdown to text.');
+        console.error(err);
+    }
+    return text;
+}
+
+export default {
+    transform({content, from}: {content: string, from: string}) {
+        if (from === 'markdown')
+            return transformMarkdownToText(content);
+        else
+            return from;
+    },
+};
