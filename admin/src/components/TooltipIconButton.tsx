@@ -15,10 +15,11 @@ interface TooltipIconButtonProps {
     tooltip?: string;
 }
 
-const TooltipIconButton = ({ children, label, variant, onClick, disabled, showBorder = false }: TooltipIconButtonProps) => {
+const TooltipIconButton = ({ children, label, variant, onClick, disabled, showBorder = false, tooltip }: TooltipIconButtonProps) => {
+    const accessibleLabel = label ?? tooltip ?? 'Icon button';
     if (!label)
         return (
-            <IconButton variant={variant} onClick={onClick} disabled={disabled} withTooltip={false}>
+            <IconButton label={accessibleLabel} variant={variant} onClick={onClick} disabled={disabled} withTooltip={false}>
                 {children}
             </IconButton>
         );
@@ -43,7 +44,7 @@ const TooltipIconButton = ({ children, label, variant, onClick, disabled, showBo
         <Tooltip.Provider>
             <Tooltip.Root>
                 <Tooltip.Trigger asChild>
-                    <IconButton variant={variant} onClick={onClick} disabled={disabled} withTooltip={false}>
+                    <IconButton label={accessibleLabel} variant={variant} onClick={onClick} disabled={disabled} withTooltip={false}>
                         {children}
                     </IconButton>
                 </Tooltip.Trigger>

@@ -3,12 +3,13 @@ import { Page } from '@strapi/admin/strapi-admin';
 import { useFetchClient } from '@strapi/admin/strapi-admin';
 import { useParams } from 'react-router-dom';
 import  { SubNavigation } from '../components/SubNavigation';;
-import { Box, Flex, SingleSelect, SingleSelectOption } from '@strapi/design-system';
+import { Box, Flex, Field, SingleSelect, SingleSelectOption } from '@strapi/design-system';
 import { Toggle } from '@strapi/design-system';
 import { Link } from '@strapi/design-system';
 import pluginId from '../pluginId';
 import { apiGetCollectionConfig, apiSaveCollectionConfig, apiGetTransformers } from "../utils/apiUrls";
 import { Alert } from '@strapi/design-system';
+import type { AlertVariant } from '@strapi/design-system';
 import { Button } from '@strapi/design-system';
 import { ArrowLeft } from '@strapi/icons';
 import { Typography } from '@strapi/design-system';
@@ -32,7 +33,7 @@ interface CollectionConfig {
 }
 
 interface AlertContent {
-    variant: string;
+    variant: AlertVariant;
     title: string;
     text: string;
 }
@@ -77,29 +78,40 @@ const ConfigureField = ({config, index, setFieldConfig, transformersList}: Confi
     }
 
     return (
-        <Box background="neutral100" borderColor="neutral200" hasRadius index={index} 
+        <Box background="neutral100" borderColor="neutral200" hasRadius
         padding={4}>
             <Box paddingTop={2} paddingBottom={2}>
                 <Typography fontWeight="bold" textColor="neutral600">{config.name}</Typography>
             </Box>
             <Box paddingTop={2} paddingBottom={2}>
-                <Toggle label="Index" onLabel="Yes" offLabel="No"
-                    checked={config.index} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateIndex(e.target.checked)} />
+                <Field.Root name={`index-${index}`}>
+                    <Flex gap={2} alignItems="center">
+                        <Toggle onLabel="Yes" offLabel="No"
+                            checked={config.index} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateIndex(e.target.checked)} />
+                        <Field.Label>Index</Field.Label>
+                    </Flex>
+                </Field.Root>
             </Box>
             <Flex direction="row" gap={2}>
                 <Box width="50%"  paddingTop={2} paddingBottom={2}>
-                    <TextInput label="Maps to search field" placeholder="Enter field name" name="Search field" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateMappedFieldName(e.target.value)} value={config.searchFieldName || ""} />
+                    <Field.Root name={`search-field-${index}`}>
+                        <Field.Label>Maps to search field</Field.Label>
+                        <TextInput placeholder="Enter field name" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateMappedFieldName(e.target.value)} value={config.searchFieldName || ""} />
+                    </Field.Root>
                 </Box>
                 {
                     transformersList.length > 0 && (
                         <Box width="50%"  paddingTop={2} paddingBottom={2}>
-                            <SingleSelect placeholder="Select a transformer function" name="Transformer function" value={config.transformerFunction || null} onChange= {updateTransformerFunction}>
-                                {
-                                    transformersList.map((transformer) => (
-                                        <SingleSelectOption value={transformer} key={transformer}>{transformer}</SingleSelectOption>
-                                    ))
-                                }
-                            </SingleSelect>
+                            <Field.Root name={`transformer-${index}`}>
+                                <Field.Label>Transformer function</Field.Label>
+                                <SingleSelect placeholder="Select a transformer function" value={config.transformerFunction || ""} onChange={(value: string | number) => updateTransformerFunction(String(value))}>
+                                    {
+                                        transformersList.map((transformer) => (
+                                            <SingleSelectOption value={transformer} key={transformer}>{transformer}</SingleSelectOption>
+                                        ))
+                                    }
+                                </SingleSelect>
+                            </Field.Root>
                         </Box>
                     )
                 }
@@ -107,22 +119,28 @@ const ConfigureField = ({config, index, setFieldConfig, transformersList}: Confi
             {
                 config.index && config.type && config.type === "dynamiczone" ? (
                     <Box paddingTop={2} paddingBottom={2}>
-                    <Textarea 
-                    label="Dynamic zone fields to index" 
-                    error={config.subfieldsConfigValid === false ? 'Invalid indexing configuration' : undefined}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSubfieldConfig(e.target.value)}
-                    >{config.subfields || ""}</Textarea>
+                    <Field.Root name={`dz-subfields-${index}`} error={config.subfieldsConfigValid === false ? 'Invalid indexing configuration' : undefined}>
+                        <Field.Label>Dynamic zone fields to index</Field.Label>
+                        <Textarea
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSubfieldConfig(e.target.value)}
+                            value={config.subfields || ""}
+                        />
+                        <Field.Error />
+                    </Field.Root>
                     </Box>
                 ) : null
             }
             {
                 config.index && config.type && config.type === "component" ? (
                     <Box paddingTop={2} paddingBottom={2}>
-                    <Textarea 
-                    label="Component fields to index" 
-                    error={config.subfieldsConfigValid === false ? 'Invalid indexing configuration' : undefined}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSubfieldConfig(e.target.value)}
-                    >{config.subfields || ""}</Textarea>
+                    <Field.Root name={`comp-subfields-${index}`} error={config.subfieldsConfigValid === false ? 'Invalid indexing configuration' : undefined}>
+                        <Field.Label>Component fields to index</Field.Label>
+                        <Textarea
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSubfieldConfig(e.target.value)}
+                            value={config.subfields || ""}
+                        />
+                        <Field.Error />
+                    </Field.Root>
                     </Box>
                 ) : null
             }
@@ -223,7 +241,7 @@ const ConfigureCollection = () => {
                     const attributeNames = Object.keys(resp[collectionName]);
                     const attributes: FieldConfig[] = [];
                     for (let s = 0; s<attributeNames.length; s++)
-                        attributes.push({name: attributeNames[s], ...resp[collectionName][attributeNames[s]]})
+                        attributes.push({...resp[collectionName][attributeNames[s]], name: attributeNames[s]})
                     const item = {collectionName, attributes};
                     setCollectionConfig(item);
                 }
@@ -243,7 +261,7 @@ const ConfigureCollection = () => {
   else
   return (
     <Page.Main>
-        <Page.Title>Configure Collection {selectedCollection}</Page.Title>
+        <Page.Title>{`Configure Collection ${selectedCollection ?? ''}`}</Page.Title>
     <Flex alignItems="stretch" gap={4}>
         <SubNavigation activeUrl={`/plugins/${pluginId}/configure-collections`}/>
         <Box padding={8} background="neutral100" width="100%">

@@ -10,8 +10,8 @@ const App = () => {
   return (
     <Routes>
       <Route index element={<HomePage />} />
-      <Route path="configure-collections" element={<ConfigureCollectionList />} exact />
-      <Route path={`configure-collections/:collectionName`} element={<ConfigureCollection />} exact />
+      <Route path="configure-collections" element={<ConfigureCollectionList />} />
+      <Route path={`configure-collections/:collectionName`} element={<ConfigureCollection />} />
       <Route path={`view-indexing-logs`} element={<ViewIndexingRunLog />} />
       <Route path="*" element={<Page.Error />} />
     </Routes>

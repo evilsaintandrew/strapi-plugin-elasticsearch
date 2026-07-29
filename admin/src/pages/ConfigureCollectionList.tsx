@@ -9,11 +9,12 @@ import { Page } from '@strapi/admin/strapi-admin';
 import { useFetchClient } from '@strapi/admin/strapi-admin';
 import pluginId from '../pluginId';
 import  { SubNavigation } from '../components/SubNavigation';
-import { Grid, Box, Flex } from '@strapi/design-system';
+import { Grid, Box, Flex, Field } from '@strapi/design-system';
 import { useEffect } from 'react';
 import { apiGetContentConfig, apiRequestCollectionIndexing,
         apiImportContentConfig, apiExportContentConfig } from "../utils/apiUrls";
 import { Alert } from '@strapi/design-system';
+import type { AlertVariant } from '@strapi/design-system';
 import { Table, Thead, Tbody, Tr, Td, Th } from '@strapi/design-system';
 import { Typography } from '@strapi/design-system';
 import { Pencil, Server } from '@strapi/icons';
@@ -25,7 +26,7 @@ import Loader from '../components/Loader';
 import TooltipIconButton from '../components/TooltipIconButton';
 
 interface AlertContent {
-  variant: string;
+  variant: AlertVariant;
   title: string;
   text: string;
 }
@@ -56,9 +57,7 @@ const Configure = () => {
 
   const exportContentConfig = () => {
       
-    return get(apiExportContentConfig, {
-      responseType: 'blob'
-    })
+    return get(apiExportContentConfig)
     .then((response) => {
       const jsonString = JSON.stringify(response.data, null, 2);
       const blob = new Blob([jsonString], { type: 'application/json' });
@@ -281,13 +280,14 @@ const Configure = () => {
                               <Modal.Title>Import Search Configuration</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                              <Textarea 
-                                label="Configuration Json" 
-                                error={!isEnteredJsonValid ? 'Invalid Json' : undefined}
-                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setImportJson(e.target.value)}
-                              >
-                                {importJson}
-                              </Textarea>
+                              <Field.Root name="configuration-json" error={!isEnteredJsonValid ? 'Invalid Json' : undefined}>
+                                <Field.Label>Configuration Json</Field.Label>
+                                <Textarea
+                                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setImportJson(e.target.value)}
+                                  value={importJson ?? ''}
+                                />
+                                <Field.Error />
+                              </Field.Root>
                             </Modal.Body>
                             <Modal.Footer>
                               <Modal.Close>
@@ -296,7 +296,7 @@ const Configure = () => {
                               <Button 
                                 loading={isInProgress} 
                                 onClick={performImport} 
-                                disabled={(!isEnteredJsonValid && !importJson!.length) > (0 as any)}
+                                disabled={!isEnteredJsonValid || !importJson || importJson.length === 0}
                               >
                                 Import
                               </Button>

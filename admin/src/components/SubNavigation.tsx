@@ -34,10 +34,10 @@ export const SubNavigation = ({activeUrl}: SubNavigationProps) => {
   return (<Box style={{
         height: '100vh'
       }} background="neutral200">
-            <SubNav ariaLabel="Settings sub nav">
+            <SubNav aria-label="Settings sub nav">
               <SubNavHeader label="Strapi Elasticsearch" />
               <SubNavSections>
-                <SubNavSection>
+                <SubNavSection label="Navigation">
                   {links.map(link => <SubNavLink 
                   tag={NavLink} to={link.href} key={link.id} active={link.href === activeUrl} >
                       {link.label}

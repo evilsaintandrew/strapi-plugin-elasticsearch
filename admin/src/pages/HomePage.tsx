@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Page } from '@strapi/admin/strapi-admin';
 import { useFetchClient } from '@strapi/admin/strapi-admin';
 import { Alert } from '@strapi/design-system';
+import type { AlertVariant } from '@strapi/design-system';
 import  { SubNavigation } from '../components/SubNavigation';
-import { Box, Flex, Tab } from '@strapi/design-system';
+import { Box, Flex } from '@strapi/design-system';
 import { Typography } from '@strapi/design-system';
 import { apiGetElasticsearchSetupInfo, apiRequestReIndexing,
     apiTriggerIndexing } from '../utils/apiUrls';
@@ -17,7 +18,7 @@ import pluginId from '../pluginId';
 import TooltipIconButton from '../components/TooltipIconButton';
 
 interface AlertContent {
-  variant: string;
+  variant: AlertVariant;
   title: string;
   text: string;
 }
@@ -110,7 +111,7 @@ const Homepage = () => {
         <Box  width="100%" paddingBottom={4}>
         <Grid.Root paddingTop={8} gap={4}>
         <Grid.Item col={9} s={12} direction="column" alignItems="stretch">
-            <Table>
+            <Table colCount={2} rowCount={Object.keys(setupInfo).length}>
               <tbody>
             {
                 setupInfo && (
