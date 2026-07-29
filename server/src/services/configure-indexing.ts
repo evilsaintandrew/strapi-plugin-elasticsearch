@@ -91,7 +91,7 @@ export default ({ strapi }: { strapi: StrapiWithElasticsearch }) => ({
     const fieldsToExclude: string[] = typeof pluginConfig.allowIndexingMetadataFields == 'boolean' &&  pluginConfig.allowIndexingMetadataFields == true ? [] : ['createdAt', 'createdBy', 'publishedAt', 'publishedBy', 'updatedAt', 'updatedBy']
     const pluginStore = getPluginStore();
     const settings = await pluginStore.get({ key: 'configsettings' }) as string | null;
-    const contentTypes = strapi.contentTypes as Record<string, { attributes: Record<string, Record<string, unknown>> }>;
+    const contentTypes = strapi.contentTypes as unknown as Record<string, { attributes: Record<string, Record<string, unknown>> }>;
     const apiContentTypes = Object.keys(contentTypes).filter((c) => c.includes('api::'));
     const apiContentConfig: ContentConfig = {};
     for (let r = 0; r < apiContentTypes.length; r++)

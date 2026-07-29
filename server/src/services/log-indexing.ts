@@ -19,7 +19,7 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
     },
     async fetchIndexingLogs(count = 50) {
         const records = await strapi.documents('plugin::elasticsearch.indexing-log').findMany({
-            sort: { createdAt: 'DESC' },
+            sort: { createdAt: 'desc' },
             start: 0,
             limit: count
         });

@@ -1,6 +1,7 @@
 import type { Core } from '@strapi/strapi';
+import type { Context as KoaContext } from 'koa';
 
-type Ctx = Core.Context;
+type Ctx = KoaContext;
 
 export default ({ strapi }: { strapi: Core.Strapi }) => {
     const indexer = strapi.plugins['elasticsearch'].services.indexer as any;

@@ -1,9 +1,5 @@
-interface Route {
-  method: string;
-  path: string;
-  handler: string;
-  config: { policies: string[] };
-}
+import type { Core } from '@strapi/strapi';
+
 
 export default {
     // accessible only from admin UI
@@ -51,5 +47,5 @@ export default {
         handler: 'configureIndexing.getTransformers',
         config: { policies: [] },
       },
-    ] as Route[],
+    ] as Core.RouteInput[],
   };

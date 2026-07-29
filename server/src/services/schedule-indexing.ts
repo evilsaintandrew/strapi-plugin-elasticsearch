@@ -56,8 +56,8 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
         await strapi.documents('plugin::elasticsearch.task').update({
             documentId: recId,
             data : {
-                'indexing_status' : 'done'
-            }
+                indexing_status: 'done'
+            } as never
         });
     },
     async markIndexingTaskCompleteByItemDocumentId (recId: string) {
@@ -72,8 +72,8 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
                 await strapi.documents('plugin::elasticsearch.task').update({
                     documentId: itemsToUpdate[k].documentId,
                     data : {
-                        'indexing_status' : 'done'
-                    }
+                        indexing_status: 'done'
+                    } as never
                 });
             }
         }

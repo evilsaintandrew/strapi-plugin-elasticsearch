@@ -1,9 +1,4 @@
-interface Route {
-  method: string;
-  path: string;
-  handler: string;
-  config: { policies: string[] };
-}
+import type { Core } from '@strapi/strapi';
 
 export default [
   {
@@ -15,4 +10,4 @@ export default [
       policies: [],
     },
   },
-] as Route[];
+] as Core.RouteInput[];

@@ -1,7 +1,8 @@
 import type { Core } from '@strapi/strapi';
+import type { Context as KoaContext } from 'koa';
 import qs from 'qs';
 
-type Ctx = Core.Context;
+type Ctx = KoaContext;
 
 // `strapi` is provided as a global by the Strapi runtime (matches original behavior).
 declare const strapi: Core.Strapi;

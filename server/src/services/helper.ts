@@ -1,4 +1,4 @@
-import type { Core } from '@strapi/strapi';
+import type { Core, UID } from '@strapi/strapi';
 import { isEmpty, merge } from 'lodash/fp';
 import transformServiceProvider from './transform-content';
 
@@ -36,8 +36,8 @@ const getFullPopulateObject = (modelUid: string, maxDepth = 20, ignore?: string[
     return undefined;
   }
 
-  const populate: Record<string, any> = {};
-  const model = getStrapi().getModel(modelUid) as any;
+  const populate: Record<string, unknown> = {};
+  const model = getStrapi().getModel(modelUid as UID.ContentType);
   if (ignore && !ignore.includes(model.collectionName)) ignore.push(model.collectionName)
   for (const [key, value] of Object.entries(
     getModelPopulationAttributes(model)
@@ -263,8 +263,8 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
         }
     },
     isCollectionDraftPublish({collectionName}: {collectionName: string}) {
-        const model = strapi.getModel(collectionName) as any;
-        return model.attributes.publishedAt ? true : false
+        const model = strapi.getModel(collectionName as UID.ContentType);
+        return 'publishedAt' in model.attributes ? true : false
     },
     getPopulateAttribute({collectionName}: {collectionName: string}) {
         //TODO : We currently have set populate to upto 4 levels, should

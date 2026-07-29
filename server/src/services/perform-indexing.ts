@@ -1,4 +1,4 @@
-import type { Core } from '@strapi/strapi';
+import type { Core, UID } from '@strapi/strapi';
 
 export default ({ strapi }: { strapi: Core.Strapi }) => ({
 
@@ -67,20 +67,21 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
         if (indexName === null)
             indexName = await helper.getCurrentIndexName();
         let entries: any[] = [];
+        const docService = strapi.documents(collectionName as UID.ContentType);
         if (isCollectionDraftPublish)
         {
-            entries = await strapi.documents(collectionName).findMany({
-                sort: { createdAt: 'DESC' },
+            entries = await docService.findMany({
+                sort: 'createdAt:desc',
                 populate: populateAttrib['populate'],
                 status: 'published'
-            });
+            } as never) as any[];
         }
         else
         {
-            entries = await strapi.documents(collectionName).findMany({
-                sort: { createdAt: 'DESC' },
+            entries = await docService.findMany({
+                sort: 'createdAt:desc',
                 populate: populateAttrib['populate'],
-            });
+            } as never) as any[];
         }
         if (entries)
         {

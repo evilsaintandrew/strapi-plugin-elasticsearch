@@ -1,7 +1,8 @@
 import type { Core } from '@strapi/strapi';
+import type { Context as KoaContext } from 'koa';
 
 const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
-  index(ctx: Core.Context) {
+  index(ctx: KoaContext) {
     ctx.body = strapi
       .plugin('strapi-plugin-elasticsearch')
       // the name of the service file & the method.

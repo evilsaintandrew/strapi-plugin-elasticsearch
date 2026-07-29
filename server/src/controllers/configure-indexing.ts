@@ -1,6 +1,7 @@
 import type { Core } from '@strapi/strapi';
+import type { Context as KoaContext } from 'koa';
 
-type Ctx = Core.Context;
+type Ctx = KoaContext;
 
 export default ({ strapi }: { strapi: Core.Strapi }) => {
   // Plugin services are not statically typed; cast once at the boundary.
